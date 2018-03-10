@@ -10,8 +10,7 @@ public class LittleQuiz{
   }
 
   public static void Correct() {
-    System.out.println("Thats right!");
-    System.out.println("");
+    System.out.println("Thats right! \n");
   }
 
   public static boolean checkAnswer(int correctAnswer, int userInput) {
@@ -20,7 +19,7 @@ public class LittleQuiz{
       Correct();
       result = true;
     } else {
-      System.out.println("That's incorrect");
+      System.out.println("That's incorrect \n");
     }
     return result;
   }
