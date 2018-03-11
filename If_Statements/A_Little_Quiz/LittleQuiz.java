@@ -10,7 +10,8 @@ public class LittleQuiz{
   }
 
   public static void Correct() {
-    System.out.println("Thats right! \n");
+    System.out.println("Thats right!");
+    System.out.println("");
   }
 
   public static boolean checkAnswer(int correctAnswer, int userInput) {
@@ -19,12 +20,10 @@ public class LittleQuiz{
       Correct();
       result = true;
     } else {
-      System.out.println("That's incorrect \n");
+      System.out.println("That's incorrect");
     }
     return result;
   }
-
-
 
   public static int getUserInput() {
     Scanner keyboard = new Scanner(System.in);
