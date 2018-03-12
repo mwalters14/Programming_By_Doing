@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class CompareTo{
   public static void main(String[] args) {
     // Less than 0
-    StaticCompareString("axe","wheel");
+    StaticCompareString("axe","cell");
     StaticCompareString("marijuana","weed");
     StaticCompareString("I","will");
     StaticCompareString("I","don't");
