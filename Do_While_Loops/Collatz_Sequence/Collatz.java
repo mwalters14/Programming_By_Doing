@@ -15,6 +15,7 @@ public class Collatz {
     } else {
       result = (3 * number) + 1;
     }
+    System.out.print(result + "   ");
     count++;
 
     do {
