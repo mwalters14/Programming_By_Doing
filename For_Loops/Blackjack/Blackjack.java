@@ -103,6 +103,7 @@ public class Blackjack {
           }
         }
       }
+
       System.out.println("\nWould you like to play again?");
       String userBool = user.setInput();
       if (userBool.equalsIgnoreCase("no") ) {
@@ -111,9 +112,9 @@ public class Blackjack {
         break;
       } else if (userBool.equalsIgnoreCase("yes")) {
       } else {
-        System.out.println("I did not understand your input");
-        System.out.println("\nWould you like to play again?");
-        userBool = user.setInput();
+          System.out.println("I did not understand your input");
+          System.out.println("\nWould you like to play again?");
+          userBool = user.setInput();
       }
     }
   }
