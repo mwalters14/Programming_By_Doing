@@ -7,47 +7,115 @@ public class TicTacToe
 
 	public static void main( String[] args )
 	{
-		Scanner keyboard = new Scanner(System.in);
+    Game game = new Game();
+    char symbol = 'X';
+    int player = 1;
 
 		initBoard();
 		displayBoard();
+    game.start_game(player, symbol);
 
-    System.out.println("'O' choose your location");
 
-    boolean won = false;
+  }
 
-    while (!won) {
+
+static class Game {
+
+    private static void start_game(int player, char symbol) {
+      System.out.println("Player 1, you are X");
+      System.out.println("Player 2, you are O\n");
+
+      boolean winner = false;
+
+      while (!winner) {
+        int[] location = get_location(symbol);
+        place_symbol(location, symbol);
+        winner = check_ifWinner(symbol);
+        displayBoard();
+
+        if (winner) {
+             winner(symbol);
+         }
+         player *= -1;
+         symbol = change_symbol(player, symbol);
+       }
+    }
+
+    private static char change_symbol(int player, char symbol) {
+      if (player != 1) {
+        symbol = 'O';
+      } else {
+        symbol = 'X';
+      }
+      return symbol;
+    }
+    private static void place_symbol(int[] location, char symbol) {
+      for (int i = 0; i < 3 ; i++ ) {
+        for (int e = 0; e < 3 ; e++ ) {
+          if (board[location[0]][location[1]] == ' ') {
+            board[location[0]][location[1]] = symbol;
+          }
+        }
+      }
+    }
+
+    private static int[] get_location(char symbol) {
+      Scanner keyboard = new Scanner(System.in);
+      int[] location = new int[2];
+      System.out.println(symbol + " choose your location");
+
       System.out.print("Row: ");
       int row = keyboard.nextInt();
 
       System.out.print("Column: ");
       int column = keyboard.nextInt();
-      for (int i = 0; i < 3 ; i++ ) {
-        for (int e = 0; e < 3 ; e++ ) {
-          if (board[row][column] == ' ') {
-            board[row][column] = 'O';
+
+      while (board[row][column] != ' ') {
+        System.out.println("Board location is taken by " + board[row][column]);
+        System.out.println("Please choose another location\n");
+
+        System.out.print("Row: ");
+        row = keyboard.nextInt();
+
+        System.out.print("Column: ");
+        column = keyboard.nextInt();
+      }
+      location[0] = row;
+      location[1] = column;
+      return location;
+    }
+
+    private static boolean check_ifWinner(char symbol) {
+      boolean bool = false;
+      for(int i = 0; i < 3; i++) {
+        for (int e = 0; e < 3; e++ ) {
+          if (board[i][0] == symbol && board[i][1] == symbol && board[i][2] == symbol) {
+            bool = true;
+          }
+          if (board[0][e] == symbol && board[1][e] == symbol && board[2][e] == symbol) {
+            bool = true;
+          }
+          if (board[i][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) {
+            bool = true;
+          }
+          if (board[i][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) {
+            bool = true;
           }
         }
       }
-      boolean winner = check_winner();
-      displayBoard();
-      // if (winner) {
-      //     System.out.println("You won!");
-      // }
+      return bool;
+    }
+
+    private static void winner(char symbol) {
+      if (symbol == 'X') {
+        System.out.println("Player 1 won!");
+      } else {
+        System.out.println("Player 2 won!");
+      }
     }
   }
 
-  public static boolean check_winner() {
-    boolean bool = false;
-    for(int i = 0; i < 3; i++) {
-      for (int e = 0; e < 3; e++ ) {
-        if (board[i][e] == 'O' && board[i][e] == 'O' && board[i][e] == 'O') {
-          bool = true;
-        }
-      }
-    }
-    return bool;
-  }
+
 
 	public static void initBoard()
 	{
