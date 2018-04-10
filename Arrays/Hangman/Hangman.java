@@ -1,5 +1,5 @@
 import java.util.*;
-
+120
 public class Hangman {
   public static void main(String[] args) {
     Random random = new Random();
