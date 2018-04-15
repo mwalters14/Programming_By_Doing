@@ -1,0 +1,10 @@
+Steve_Jobs
+50
+Micheal_Jordan
+60
+James_Bond
+80
+George_Washington
+100
+Myron_Walters
+22
