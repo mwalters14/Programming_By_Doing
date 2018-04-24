@@ -1,4 +1,4 @@
-package com.pbd.Basic_ArrayList_4;
+package com.pbd.CopyingArrayLists;
 
 import java.util.ArrayList;
 import java.util.Random;
