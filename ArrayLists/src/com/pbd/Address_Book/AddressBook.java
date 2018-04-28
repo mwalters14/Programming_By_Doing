@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-class Record {
+class   Record {
     String first_name;
     String last_name;
     String phone_number;
@@ -42,6 +42,38 @@ public class AddressBook {
                 String path = keyboard.next();
                 load_file(records, path);
                 System.out.println();
+            }
+
+            if (choice == 3) {
+                Record record = new Record();
+                System.out.println("Add Record");
+
+                System.out.print("\tFirst Name: ");
+                record.first_name = keyboard.next();
+
+                System.out.print("\tLast Name: ");
+                record.last_name = keyboard.next();
+
+                System.out.print("\tPhone Number: ");
+                record.phone_number = keyboard.next();
+
+                System.out.print("\tAddress: ");
+                record.address = keyboard.nextLine();
+                keyboard.nextLine();
+
+                System.out.println();
+
+
+                records.add(record);
+            }
+
+            if (choice == 4) {
+                display_record(records);
+                System.out.print("Which record to remove: ");
+                int record_toRemove = keyboard.nextInt();
+                records.remove(record_toRemove);
+                System.out.println("Record has been removed successfully");
+                display_record(records);
             }
 
             if (choice == 8) {
