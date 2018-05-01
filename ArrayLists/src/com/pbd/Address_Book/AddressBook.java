@@ -2,6 +2,7 @@ package com.pbd.Address_Book;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 class   Record {
@@ -19,8 +20,6 @@ public class AddressBook {
 
         ArrayList<Record> records = new ArrayList<Record>(size);
 
-
-
         while (choice != 9) {
             System.out.println("1) Load data from file");
             System.out.println("2) Save to file");
@@ -33,45 +32,86 @@ public class AddressBook {
             System.out.println("9) Quit");
 
             System.out.println();
-            System.out.print("What would you like to do with the database: ");
-            choice = keyboard.nextInt();
+            choice = Error_Handling.check_choice();
 
-            if (choice == 1) {
-                load_file(records);
-            }
-
-            if (choice == 2) {
-                save_toFile(records);
-            }
-
-            if (choice == 3) {
-                add_record(records);
-            }
-
-            if (choice == 4) {
-                remove_record(records);
-            }
-
-            if (choice == 5) {
-                edit_record(records);
-            }
-
-            if (choice == 6) {
-                sort_records(records);
-            }
-
-            if (choice == 7) {
-                search_record(records);
-            }
-
-            if (choice == 8) {
-                display_record(records);
+            switch(choice) {
+                case 1:
+                    load_file(records);
+                    break;
+                case 2:
+                    save_toFile(records);
+                    break;
+                case 3:
+                    add_record(records);
+                    break;
+                case 4:
+                    remove_record(records);
+                    break;
+                case 5:
+                    edit_record(records);
+                    break;
+                case 6:
+                    sort_records(records);
+                    break;
+                case 7:
+                    search_record(records);
+                    break;
+                case 8:
+                    display_record(records);
+                    break;
             }
         }
         System.out.println("Thanks for using the Address Book program, Goodbye!");
         keyboard.close();
     }
 
+    static class Error_Handling {
+        public static int check_choice() {
+            System.out.print("What would you like to do with the database: ");
+
+            while(!keyboard.hasNextInt() && keyboard.nextInt() > 9) {
+                keyboard.next();
+                System.out.println("That is not a valid choice");
+            }
+            return keyboard.nextInt();
+        }
+
+        public static int check_sortBy() {
+            int sortBy = 0;
+
+            System.out.println("How would you like to sort the records? (-1 to return to main menu)");
+            System.out.println("1)\tFirst Name");
+            System.out.println("2)\tLast Name");
+            System.out.println("3)\tPhone Number");
+            System.out.println("4)\tAddress");
+
+            try {
+                sortBy = keyboard.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Integers only");
+            }
+
+            while (sortBy == 0 || sortBy > 4) {
+                System.out.println("That is not a valid choice");
+                sortBy = keyboard.nextInt();
+            }
+            return sortBy;
+        }
+
+        public static int check_entry(ArrayList<Record> records) {
+            int entry = 0;
+
+            System.out.print("What entry would you like to edit: ");
+            entry = keyboard.nextInt();
+
+            while (records.size() < entry) {
+                System.out.println("Record does not exist");
+                System.out.print("What entry would you like to edit: ");
+                entry = keyboard.nextInt();
+            }
+            return entry;
+        }
+    }
 
     public static void add_record(ArrayList<Record> records) {
         Record record = new Record();
@@ -118,7 +158,20 @@ public class AddressBook {
         sc.close();
     }
 
+    public static boolean empty_book(ArrayList<Record> records) {
+        if (records.size() == 0) {
+            System.out.println("Address book is empty..returning to main menu");
+            System.out.println();
+            return true;
+        }
+        return false;
+    }
+
     public static void remove_record(ArrayList<Record> records) {
+        if (empty_book(records)) {
+            return;
+        }
+
         display_record(records);
         System.out.print("Which record to remove: ");
         int record_toRemove = keyboard.nextInt();
@@ -128,15 +181,15 @@ public class AddressBook {
     }
 
     public static void edit_record(ArrayList<Record> records) {
+        if (empty_book(records)) {
+            return;
+        }
+
+        int entry = Error_Handling.check_entry(records);
         int options = 0;
-        int entry = 0;
 
         display_record(records);
         System.out.println();
-
-        System.out.print("What entry would you like to edit: ");
-        entry = keyboard.nextInt();
-
         System.out.println("What would you like to edit on entry " + entry);
 
         System.out.println("Options");
@@ -185,15 +238,14 @@ public class AddressBook {
     }
 
     public static void sort_records(ArrayList<Record> records) {
-        System.out.println("How would you like to sort the records?");
-        System.out.println("1)\tFirst Name");
-        System.out.println("2)\tLast Name");
-        System.out.println("3)\tPhone Number");
-        System.out.println("4)\tAddress");
-
-        int sortBy = keyboard.nextInt();
+        if (empty_book(records)) {
+            return;
+        }
+        int sortBy = Error_Handling.check_sortBy();
 
         switch (sortBy) {
+            case -1:
+                return;
             case 1:
                 Sort.sort_firstName(records);
             case 2:
@@ -253,11 +305,8 @@ public class AddressBook {
                 j++;
 
                 for (int i = 0; i < records.size() - j ; i++) {
-                    String[] one = records.get(i).phone_number.split("-");
-                    String[] two = records.get(i+1).phone_number.split("-");
-
-                    int temp = Integer.parseInt(one[0]);
-                    int swap = Integer.parseInt(two[0]);
+                    int temp = Integer.parseInt(records.get(i).phone_number.split("-")[0]);
+                    int swap = Integer.parseInt(records.get(i+1).phone_number.split("-")[0]);
 
                     System.out.println(temp);
                     System.out.println(swap);
@@ -301,8 +350,23 @@ public class AddressBook {
     }
 
     private static void search_record(ArrayList<Record> records) {
-        System.out.print("Which entry would you like to search for? ");
+        if (empty_book(records)) {
+            return;
+        }
+
+        System.out.print("Which entry would you like to search for (-1 to return to main menu)? ");
         int search = keyboard.nextInt();
+
+        if (search == -1) {
+            return;
+        }
+
+        while (records.size() < search) {
+            System.out.println("That record doesn't exist");
+            System.out.print("Which entry would you like to search for? ");
+            search = keyboard.nextInt();
+        }
+
 
         System.out.println("Record " + search);
         System.out.println("\tFirst Name: " + records.get(search).first_name);
@@ -324,6 +388,10 @@ public class AddressBook {
     }
 
     private static void save_toFile(ArrayList<Record> records) {
+        if (empty_book(records)) {
+            return;
+        }
+
         System.out.print("What shall we call the name of this file: ");
         String filename = keyboard.next();
 
@@ -365,6 +433,10 @@ public class AddressBook {
     }
 
     private static void display_record(ArrayList<Record> records){
+        if (empty_book(records)) {
+            return;
+        }
+
         for (int i = 0; i < records.size(); i++) {
             System.out.println("Record " + (i+1));
             System.out.println("\tFirst Name: " + records.get(i).first_name);
